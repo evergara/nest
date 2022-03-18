@@ -1,5 +1,11 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@environments/*": ["./environments/*"],
+      "@domain/*": [",/src/domain/*"],
+      "@infrastructure/*": ["./src/infrastructure/*"],
+      "@aplication/*": ["./src/aplication/*"],
+    },
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
