@@ -10,8 +10,9 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
-import { response } from 'express';
+import { Response } from 'express';
 
 import { CreateProductDto } from './../../dtos/product.dto';
 import { UpdateProductDto } from '../../dtos/product.dto';
@@ -45,16 +46,17 @@ export class ProductsController {
 
   @Get('/:productId')
   @HttpCode(HttpStatus.ACCEPTED)
-  getOne(@Param('productId', ParseIntPipe) productId: number) {
-    // return response.status(200).send({
-    //   message: `product ${productId}`,
-    //});
-    return {
+  getOne(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Res() response: Response,
+  ) {
+    response.status(HttpStatus.OK).send({
       message: `product ${productId}`,
-    };
+    });
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() payload: CreateProductDto) {
     return {
       message: 'accion de crear',
