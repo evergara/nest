@@ -21,4 +21,23 @@ export class FundamentController {
     getPage(@Param() params): string {
         return `Burcar: ${params.query} - Pagina: ${params.page}`;
     }
+
+    @Get('params/:query/:page/:limit')
+    getParam(@Param() params): string {
+        return params;
+    }
+
+    @Get('pecific/:query/:page/:limit')
+    geteSpecificParam(@Param('query') query): string {
+        return query;
+    }
+
+    @Get('buscar/:query/:page/:limit/:flat')
+    geteSpecificParams(@Param('query') query, 
+                       @Param('page') page,
+                       @Param('limit') limit,
+                       @Param('flat') flat): string {
+        return `Burcar: ${query} - Pagina: ${page} - limite: ${limit} - bandera: ${flat}`;
+    }
+
 }
