@@ -16,10 +16,12 @@ import { Response } from 'express';
 
 import { CreateProductDto } from './../../dtos/product.dto';
 import { UpdateProductDto } from '../../dtos/product.dto';
+import { ProductsService } from 'src/products/services/products/products.service';
+import { Product } from '../../entities/product.entity';
 
 @Controller('products')
 export class ProductsController {
-  constructor() {}
+  constructor(private productsService: ProductsService) {}
 
   @Get()
   getProducts(
@@ -27,6 +29,7 @@ export class ProductsController {
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
+
     return {
       message: 'Listado de productos',
       filters: {
@@ -34,6 +37,9 @@ export class ProductsController {
         offset,
         brand,
       },
+      product: [
+        this.productsService.findAll()
+      ]
     };
   }
 
@@ -50,34 +56,37 @@ export class ProductsController {
     @Param('productId', ParseIntPipe) productId: number,
     @Res() response: Response,
   ) {
+
+    let product: Product = this.productsService.findOne(productId);
     response.status(HttpStatus.OK).send({
-      message: `product ${productId}`,
+      product
     });
   }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() payload: CreateProductDto) {
+    let product: Product = this.productsService.create(payload);
     return {
       message: 'accion de crear',
-      payload,
+      product
     };
   }
 
   @Put(':id')
-  update(@Param('id') productId: string, @Body() payload: UpdateProductDto) {
+  update(@Param('id', ParseIntPipe)  productId: number, @Body() payload: UpdateProductDto) {
+    let product: Product = this.productsService.update(productId, payload);
     return {
       message: {
         id: productId,
-        payload,
+        product,
       },
     };
   }
 
   @Delete(':id')
-  delete(@Param('id') productId: string) {
-    return {
-      message: `product ${productId}`,
-    };
+  delete(@Param('id', ParseIntPipe)  productId: number) {
+    let isRemove = this.productsService.remove(productId);
+    return isRemove;
   }
 }
